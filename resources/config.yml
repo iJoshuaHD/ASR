@@ -1,0 +1,13 @@
+---
+##############################
+##### ASR CONFIG FILE ########
+##############################
+# FIXED Time is in Minutes.  #
+# You can edit fixed-minutes #
+# but dont touch  remaining- #
+# seconds!!                  #
+##############################
+fixed-minutes: 60
+remaining-minutes: 60
+remaining-seconds: 3600
+...

@@ -1,0 +1,8 @@
+name: ASR
+main: ASR\ASR
+version: 1.0.0
+api: [1.0.0]
+load: STARTUP
+author: iJoshuaHD
+description: Automatically Restarts your Server.
+website: http://github.com/iJoshuaHD
