@@ -1,8 +1,22 @@
 name: ASR
-main: ASR\ASR
-version: 1.0.0
-api: [1.0.0]
+main: iJoshuaHD\iMCPE\ASR\Loader
+version: 2.0.0
+api: [1.9.0, 1.10.0]
 load: STARTUP
 author: iJoshuaHD
-description: Automatically Restarts your Server.
-website: http://github.com/iJoshuaHD
+description: iMCPE_ASR
+website: https://imcpe.com
+commands:
+ asr:
+  description: "Set ASR Time"
+  permission: asr.command.asr
+ restart:
+  description: "Check ASR Status"
+  permission: asr.command.restart
+permissions:
+ asr.command.asr:
+  description: "Usage: /asr <value>"
+  default: op
+ asr.command.restart:
+  description: "Usage: /restart"
+  default: true
