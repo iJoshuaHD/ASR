@@ -18,7 +18,7 @@ class Commands implements CommandExecutor{
 			case "asr":
 				if(isset($args[0])){
 					if(!is_numeric($args[0])){
-						$sender->sendMessage("> Only Numbers is prohibited.");
+						$sender->sendMessage("[ASR] Only Numbers is prohibited.");
 						return;
 					}
 					if($args[0] > 60){
