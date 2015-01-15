@@ -2,9 +2,15 @@
 
 namespace iJoshuaHD\iMCPE\ASR;
 
+use pocketmine\Player;
+use pocketmine\IPlayer;
+
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
+use pocketmine\command\ConsoleCommandSender;
+
+use pocketmine\utils\TextFormat;
 
 class Commands implements CommandExecutor{
 
@@ -23,6 +29,7 @@ class Commands implements CommandExecutor{
 					}
 					if($args[0] > 60){
 						$sender->sendMessage("[ASR] It's not advised the value would be more than 60. If you want to increase it, edit the config.yml instead as this plugin won't allow you to set the value more than the said value because it's not prescribed.");
+						$sender->sendMessage("> Only Numbers is prohibited.");
 						return;
 					}
 					$this->plugin->setValueTimer($args[0]);

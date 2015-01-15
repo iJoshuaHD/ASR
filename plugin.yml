@@ -1,6 +1,6 @@
 name: ASR
 main: iJoshuaHD\iMCPE\ASR\Loader
-version: 2.0.0
+version: 2.0.1
 api: [1.9.0, 1.10.0, 1.11.0]
 load: STARTUP
 author: iJoshuaHD

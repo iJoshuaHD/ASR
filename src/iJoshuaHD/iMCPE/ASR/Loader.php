@@ -16,6 +16,8 @@ use pocketmine\Player;
 
 use pocketmine\scheduler\CallbackTask;
 
+use pocketmine\command\CommandSender;
+
 use pocketmine\plugin\PluginBase;
 
 use pocketmine\utils\Config;
@@ -23,7 +25,7 @@ use pocketmine\utils\TextFormat;
 
 class Loader extends PluginBase{
 
-	private $count_down = 60; //secs
+	public $count_down = 60; //secs
 	public $time_count = array();
 
     public function onEnable(){
@@ -35,12 +37,24 @@ class Loader extends PluginBase{
 		//Load Config
 		$this->loadConfigurations();
 	}
+    
+    public function onDisable(){
+		$this->db->closeDatabase();
+    }
 	
 	/***************************
 	*==========================*
 	*====[ External APIs ]=====*
 	*==========================*
 	***************************/
+	
+	public function pluginDisable(){
+		return $this->getServer()->getPluginManager()->disablePlugin($this);
+	}
+	
+	public function getDb(){
+		return $this->db;
+	}
 	
 	public function setValueTimer($value){
 		$this->preferences->set("TimeToRestart", $value);
@@ -126,34 +140,60 @@ class Loader extends PluginBase{
 	
 	public function loadConfigurations(){
 		if(!file_exists($this->getDataFolder())){
+			$this->getServer()->getLogger()->info(TextFormat::YELLOW . "[ASR] It Seems you're new in using ASR.");
+			$this->getServer()->getLogger()->info(TextFormat::YELLOW . "[ASR] Applying Configurations [...]");
 			@mkdir($this->getDataFolder(), 0777, true);
 			$this->preferences = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-			$this->preferences->set("Version", "2.0.0");
+			$this->preferences->set("Version", "2.0.1");
 			$this->preferences->set("TimeToRestart", 30);
 			$this->preferences->set("Prefix", "[ASR]");
+			$this->preferences->set("Logger_DB", false);
 			$this->preferences->save();
+			$this->getServer()->getLogger()->info(TextFormat::AQUA . "[ASR] Note: Logger is disabled by default.");
+			$this->getServer()->getLogger()->info(TextFormat::BLUE . "[ASR] You can Enable it by editing the config.yml");
+			$this->getServer()->getLogger()->info(TextFormat::AQUA . "[ASR] If you have enabled Logger, please");
+			$this->getServer()->getLogger()->info(TextFormat::BLUE . "[ASR] use the proper MySQL Server info otherwise plugin wont work.");
+			$this->getServer()->getLogger()->info(TextFormat::GREEN . "[ASR] Done!");
 		}else{
-		
 		/*	This would be useful when I make some further updates e.g. Multi Lingual Support. 
 			If you are worrying about if there's version 3.0.0 or more, don't worry, I'll deal
-			with it :)																			*/
-			
+			with it :)	*/
 			$this->preferences = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 			$version = $this->preferences->get("Version");
-			if($version !== "2.0.0"){
-				$this->getServer()->getLogger()->info(TextFormat::YELLOW . "[ASR] It Seems you're using an old version of ASR.");
-				$this->getServer()->getLogger()->info(TextFormat::YELLOW . "[ASR] Applying Configuration Updates [...]");
-				$this->preferences->set("Version", "2.0.0");
-				$this->preferences->set("TimeToRestart", 30);
-				$this->preferences->set("Prefix", "[ASR]");
+			$checker = $this->preferences->get("Logger_DB");
+			if($version !== "2.0.1" and $version == "2.0.0"){
+				$this->getServer()->getLogger()->info(TextFormat::YELLOW . "[ASR] It Seems you're using v$version of ASR.");
+				$this->getServer()->getLogger()->info(TextFormat::YELLOW . "[ASR] Applying Configuration Updates for v2.0.1 [...]");
+				$this->preferences->set("Version", "2.0.1");
+				$this->preferences->set("Logger_DB", false);
 				$this->preferences->save();
 				$this->getServer()->getLogger()->info(TextFormat::GREEN . "[ASR] Done!");
+			}else{
+				if($version !== "2.0.1" and $version !== "2.0.0"){
+					$this->getServer()->getLogger()->info(TextFormat::YELLOW . "[ASR] It Seems you're using an older version of ASR.");
+					$this->getServer()->getLogger()->info(TextFormat::YELLOW . "[ASR] Applying Configuration Updates [...]");
+					$this->preferences->set("Version", "2.0.1");
+					$this->preferences->set("TimeToRestart", 30);
+					$this->preferences->set("Prefix", "[ASR]");
+					$this->preferences->set("Logger_DB", false);
+					$this->preferences->save();
+					$this->getServer()->getLogger()->info(TextFormat::GREEN . "[ASR] Done!");
+				}
 			}
-			
+			if($checker == true){
+				$this->getServer()->getLogger()->info(TextFormat::BLUE . "[ASR] You have Logger ENABLED, please use");
+				$this->getServer()->getLogger()->info(TextFormat::AQUA . "[ASR] the proper MySQL Server info otherwise plugin wont work.");
+			}else{
+				$this->getServer()->getLogger()->info(TextFormat::RED . "[ASR] Logger is DISABLED.");
+			}
 		}
-		
+		if(!file_exists($this->getDataFolder() . "connector.yml")){
+			$this->saveResource("connector.yml");
+		}
+		$this->cfg = new Config($this->getDataFolder() . "connector.yml", Config::YAML);
 		$this->restart_time = $this->preferences->get("TimeToRestart");
 		$this->prefix = $this->preferences->get("Prefix");
+		$this->db = new Database($this); //connection with database
+		$this->db->loadDatabase();
 	}
-
 }
