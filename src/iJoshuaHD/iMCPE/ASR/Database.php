@@ -63,13 +63,13 @@ class Database{
 					$port = $this->plugin->getServer()->getPort();
 					$processid = getmypid();
 					$result = $this->db->query("SELECT port FROM asr_logger WHERE port='$port'")->fetch_assoc();
+$current = intval(time());
 					if(!$result){
 						$this->plugin->getLogger()->info(TextFormat::YELLOW ."Adding new processID for PORT: $port ...");
-						$temp = $this->db->query("INSERT INTO asr_logger(port, processid)VALUES('$port','$processid')");
+						$temp = $this->db->query("INSERT INTO asr_logger(port, processid,timestamp)VALUES('$port','$processid','$current')");
 						if($temp) $this->plugin->getLogger()->info(TextFormat::GREEN ."SUCCESS!");
 					}else{
 						$this->plugin->getLogger()->info(TextFormat::YELLOW ."Updating new processID for PORT: $port ...");
-						$current = intval(time());
 						$temp = $this->db->query("UPDATE asr_logger SET processid='$processid', timestamp='$current' WHERE port='$port'");
 						if($temp) $this->plugin->getLogger()->info(TextFormat::GREEN ."SUCCESS!");
 					}
