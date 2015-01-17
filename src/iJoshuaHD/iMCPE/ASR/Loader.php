@@ -108,6 +108,9 @@ class Loader extends PluginBase{
 			return;
 		}
 		$this->setTimer($time_target, $offset);
+		if($time_target < $this->restart_time){
+			$this->db->updateTimestamp();
+		}
 		$this->getServer()->getScheduler()->scheduleDelayedTask(new CallbackTask([$this,"start" ], [$time_target]), 1200);
 	}
 	

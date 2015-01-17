@@ -63,7 +63,6 @@ class Database{
 					$port = $this->plugin->getServer()->getPort();
 					$processid = getmypid();
 					$result = $this->db->query("SELECT port FROM asr_logger WHERE port='$port'")->fetch_assoc();
-					$port = $this->plugin->getServer()->getPort();
 					$current = intval(time());
 					if(!$result){
 						$this->plugin->getLogger()->info(TextFormat::YELLOW ."Adding new processID for PORT: $port ...");
@@ -80,6 +79,15 @@ class Database{
 				}
 			}
 			
+		}
+	}
+	
+	public function updateTimestamp(){
+		if($this->plugin->preferences->get("Logger_DB") == true){
+			$port = $this->plugin->getServer()->getPort();
+			$current = intval(time());
+			$temp = $this->db->query("UPDATE asr_logger SET timestamp='$current' WHERE port='$port'");
+			if($temp) $this->plugin->getLogger()->info(TextFormat::GREEN ."Timestamp has been Updated.");
 		}
 	}
 	
