@@ -117,7 +117,7 @@ class Loader extends PluginBase{
 	public function count_down($seconds){
 		if($seconds == 1){
 			foreach($this->getServer()->getOnlinePlayers() as $p){
-				$p->kick("Server Restart");
+				$p->kick($this->getServer()->getProperty("settings.shutdown-message", "Server closed."));
 			}
 			$this->getServer()->shutdown();
 			return;
