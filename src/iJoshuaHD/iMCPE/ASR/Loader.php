@@ -14,8 +14,6 @@ namespace iJoshuaHD\iMCPE\ASR;
 use pocketmine\Server;
 use pocketmine\Player;
 
-use pocketmine\scheduler\CallbackTask;
-
 use pocketmine\command\CommandSender;
 
 use pocketmine\plugin\PluginBase;
